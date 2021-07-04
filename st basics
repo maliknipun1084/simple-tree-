@@ -1,0 +1,125 @@
+#include <iostream>
+#include <queue>
+#include "TreeNode.h"
+using namespace std;
+
+TreeNode<int>* takeInputLevelWise() {
+	int rootData;// 
+	cout << "Enter root data" << endl;
+	cin >> rootData;
+	TreeNode<int>* root = new TreeNode<int>(rootData);// MAKING ROOT 
+
+	queue<TreeNode<int>*> pendingNodes;//       we are making queue of tree node int Data type
+	
+	pendingNodes.push(root);// 3rd case//        pushing element
+	while (pendingNodes.size() != 0) { // loop will run till tree become empty 
+		TreeNode<int>* front = pendingNodes.front();//       taking out element
+		pendingNodes.pop();
+		cout << "Enter num of children of " << front->data << endl;
+		int numChild;//                  we are asking for number of child and corresponding data 
+		cin >> numChild;
+		for (int i = 0; i < numChild; i++) {
+			int childData;
+			cout << "Enter " << i << "th child of " << front->data << endl;// 
+			cin >> childData;
+			TreeNode<int>* child = new TreeNode<int>(childData);//   no recurssion used 
+			front->children.push_back(child);
+			pendingNodes.push(child);
+		}
+	}
+	return root;
+}
+
+TreeNode<int>* takeInput() {// 2nd case
+	int rootData;
+	cout << "Enter data" << endl;
+	cin >> rootData;
+	TreeNode<int>* root = new TreeNode<int>(rootData);// making new node 
+	
+	int n;
+	cout << "Enter num of children of " << rootData << endl;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		TreeNode<int>* child = takeInput();// 2nd node is created with help of recurssion  
+		root->children.push_back(child);
+	}
+	return root;
+}
+
+void printTree(TreeNode<int>* root) {// 1st case
+	if (root == NULL) {
+		return;
+	}
+
+	cout << root->data << ":";
+	for (int i = 0; i < root->children.size(); i++) {
+		cout << root->children[i]->data << ",";/
+	}
+	cout << endl;
+	for (int i = 0; i < root->children.size() ; i++) {
+		printTree(root->children[i]);// recurssive call 
+	}
+}
+
+void printAtLevelK(TreeNode<int>* root, int k) {// 4th case 
+	if (root == NULL) {// it is not base case 
+		return;
+	}
+
+	if (k == 0) {//base case 
+		cout << root->data << endl;
+		return;
+	}
+
+	for (int i = 0; i < root->children.size(); i++) {
+		printAtLevelK(root->children[i], k - 1);//4th case call of function is at root childreni
+	}
+}
+
+int numNodes(TreeNode<int>* root) {// 5th case 
+	if (root == NULL) {
+		return 0;
+	}
+	int ans = 1;//      no base case required 
+	for (int i = 0; i < root->children.size(); i++) {
+		ans += numNodes(root->children[i]);//      recurssive call will be at root children .
+	}
+	return ans;
+}
+
+void preorder(TreeNode<int>* root) {
+	if (root == NULL) {
+		return;
+	}
+	cout << root->data << " ";//      first printing data then calling recurssion
+	for (int i = 0; i < root->children.size(); i++) {
+		preorder(root->children[i]);
+	}
+}
+
+void deleteTree(TreeNode<int>* root) {
+	for (int i = 0; i < root->children.size(); i++) {
+		deleteTree(root->children[i]);
+	}
+	delete root;
+}
+
+// 1 3 2 3 4 2 5 6 2 7 8 0 0 0 0 1 9 0
+int main() {
+	/*TreeNode<int>* root = new TreeNode<int>(1);
+	TreeNode<int>* node1 = new TreeNode<int>(2);
+	TreeNode<int>* node2 = new TreeNode<int>(3);
+	root->children.push_back(node1);
+	root->children.push_back(node2);
+	*/
+	TreeNode<int>* root = takeInputLevelWise();
+	printTree(root);
+	cout << "num: " << numNodes(root) << endl;
+	cout << "Level 2:" << endl;
+	printAtLevelK(root, 2);
+	preorder(root);
+	// TODO delete the tree
+	delete root;
+	//deleteTree(root);
+}
+
