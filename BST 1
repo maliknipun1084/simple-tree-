@@ -49,7 +49,7 @@ int minimum(BinaryTreeNode<int>* root) {
 	return min(root->data, min(minimum(root->left), minimum(root->right)));
 }
 
-bool isBST(BinaryTreeNode<int>* root) {// 1st case              =we are checking if bt is bst 
+bool isBST(BinaryTreeNode<int>* root) {// 2nd  case              =we are checking if bt is bst 
 	if (root == NULL) {
 		return true;// we will 4 case we will calculate maximum of left and right half .we will call recurssively for both half 
 	}
